@@ -13,6 +13,3 @@ supports 'centos', '~> 6.0'
 supports 'windows'
 
 depends 'java'
-depends 'git'
-depends 'mercurial'
-depends 'subversion'
