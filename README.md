@@ -11,9 +11,6 @@ Gives you the ability to create TeamCity server/agent
 ## Depends
 
 * java
-* git
-* mercurial
-* subversion
 
 ## Attributes
 
