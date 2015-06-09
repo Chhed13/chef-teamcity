@@ -20,8 +20,6 @@ TEAMCITY_PASSWORD = node['teamcity']['password'].freeze
 TEAMCITY_GROUP = node['teamcity']['group'].freeze
 TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}".freeze
 
-include_recipe 'java'
-
 if node['platform'] != 'windows'
 
   group TEAMCITY_GROUP
