@@ -11,3 +11,6 @@ recipe 'chef-teamcity::agent', 'Installs a TeamCity agent'
 supports 'redhat', '~> 6.0'
 supports 'centos', '~> 6.0'
 supports 'windows'
+
+depends 'java'
+depends 'chocolatey'
