@@ -82,5 +82,6 @@ end
 
 service TEAMCITY_SERVICE_NAME do
   supports start: true, stop: true, restart: true, status: true
+  timeout 60
   action [:enable, :start]
 end
