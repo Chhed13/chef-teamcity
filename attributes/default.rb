@@ -27,7 +27,7 @@ default['teamcity']['agent']['port'] = 9090
 default['teamcity']['agent']['authorization_token'] = nil
 default['teamcity']['agent']['system_properties'] = {}
 default['teamcity']['agent']['env_properties'] = {}
-node['teamcity']['agent']['username'] = ''
+default['teamcity']['agent']['username'] = ''
 
 case node['platform']
 when 'windows'
