@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 TEAMCITY_VERSION = node['teamcity']['version'].freeze
 TEAMCITY_SERVICE_NAME = 'TCBuildAgent'.freeze
-TEAMCITY_SERVICE_USER = node['teamcity']['agent']['username'].freeze
-TEAMCITY_SERVICE_PASS = node['teamcity']['agent']['password'].freeze
+
+service_exist = ::Win32::Service.exists?('TEAMCITY_SERVICE_NAME')
+
+#if service just created it's user will be default (LocalSystem)
+TEAMCITY_SERVICE_USER = (service_exist ? node['teamcity']['agent']['username'].freeze : '').freeze
+TEAMCITY_SERVICE_PASS = (service_exist ? node['teamcity']['agent']['password'] : '').freeze
 
 TEAMCITY_AGENT_NAME = node['teamcity']['agent']['name'].freeze
 TEAMCITY_AGENT_SERVER_URI = node['teamcity']['agent']['server_uri'].freeze
@@ -60,17 +63,17 @@ end
 template TEAMCITY_AGENT_PROPERTIES do
   source 'buildAgent.properties.erb'
   variables(
-              server_uri: TEAMCITY_AGENT_SERVER_URI,
-              name: TEAMCITY_AGENT_NAME,
-              work_dir: TEAMCITY_AGENT_WORK_DIR,
-              temp_dir: TEAMCITY_AGENT_TEMP_DIR,
-              system_dir: TEAMCITY_AGENT_SYSTEM_DIR,
-              own_address: TEAMCITY_AGENT_OWN_ADDRESS,
-              own_port: TEAMCITY_AGENT_OWN_PORT,
-              authorization_token: TEAMCITY_AGENT_AUTH_TOKEN,
-              system_properties: TEAMCITY_AGENT_SYSTEM_PROPERTIES,
-              env_properties: TEAMCITY_AGENT_ENV_PROPERTIES
-            )
+      server_uri: TEAMCITY_AGENT_SERVER_URI,
+      name: TEAMCITY_AGENT_NAME,
+      work_dir: TEAMCITY_AGENT_WORK_DIR,
+      temp_dir: TEAMCITY_AGENT_TEMP_DIR,
+      system_dir: TEAMCITY_AGENT_SYSTEM_DIR,
+      own_address: TEAMCITY_AGENT_OWN_ADDRESS,
+      own_port: TEAMCITY_AGENT_OWN_PORT,
+      authorization_token: TEAMCITY_AGENT_AUTH_TOKEN,
+      system_properties: TEAMCITY_AGENT_SYSTEM_PROPERTIES,
+      env_properties: TEAMCITY_AGENT_ENV_PROPERTIES
+  )
   not_if { ::File.exist?(TEAMCITY_AGENT_PROPERTIES) }
   notifies :restart, "service[#{TEAMCITY_SERVICE_NAME}]", :delayed
 end
@@ -79,7 +82,7 @@ execute 'install teamcity service' do
   command "#{TEAMCITY_AGENT_BIN_PATH}/service.install.bat"
   action :run
   cwd "#{TEAMCITY_AGENT_SYSTEM_DIR}/bin"
-  not_if { ::Win32::Service.exists?('TCBuildAgent') }
+  not_if { service_exist }
 end
 
 service TEAMCITY_SERVICE_NAME do
