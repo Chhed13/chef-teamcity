@@ -17,6 +17,8 @@
 
 TEAMCITY_VERSION = node['teamcity']['version'].freeze
 TEAMCITY_SERVICE_NAME = 'TCBuildAgent'.freeze
+TEAMCITY_SERVICE_USER = node['teamcity']['agent']['username'].freeze
+TEAMCITY_SERVICE_PASS = node['teamcity']['agent']['password'].freeze
 
 TEAMCITY_AGENT_NAME = node['teamcity']['agent']['name'].freeze
 TEAMCITY_AGENT_SERVER_URI = node['teamcity']['agent']['server_uri'].freeze
@@ -83,5 +85,7 @@ end
 service TEAMCITY_SERVICE_NAME do
   supports start: true, stop: true, restart: true, status: true
   timeout 60
+  run_as_user TEAMCITY_SERVICE_USER unless TEAMCITY_SERVICE_USER.empty?
+  run_as_password TEAMCITY_SERVICE_PASS unless TEAMCITY_SERVICE_USER.empty?
   action [:enable, :start]
 end
