@@ -17,7 +17,7 @@
 TEAMCITY_VERSION = node['teamcity']['version'].freeze
 TEAMCITY_SERVICE_NAME = 'TCBuildAgent'.freeze
 
-service_exist = ::Win32::Service.exists?('TEAMCITY_SERVICE_NAME')
+service_exist = ::Win32::Service.exists?(TEAMCITY_SERVICE_NAME)
 
 #if service just created it's user will be default (LocalSystem)
 TEAMCITY_SERVICE_USER = (service_exist ? node['teamcity']['agent']['username'].freeze : '').freeze
